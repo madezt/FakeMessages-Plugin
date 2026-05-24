@@ -1,4 +1,3 @@
-import { findByPropsLazy } from "@webpack";
 import { React, FluxDispatcher, ChannelStore, UserStore, SelectedChannelStore } from "@webpack/common";
 import { addContextMenuPatch, removeContextMenuPatch, NavContextMenuPatchCallback } from "@api/ContextMenu";
 import { Menu, Tooltip, Forms, Switch } from "@webpack/common";
@@ -15,7 +14,7 @@ export let pluginData: FakeMessagesData = {
     entries: {},
 };
 
-const ChatBarAPI = findByPropsLazy("addChatBarButton", "removeChatBarButton");
+let interceptDispose: (() => void) | null = null;
 
 export async function loadData() {
     const saved = await DataStore.get<FakeMessagesData>(PLUGIN_DATA_KEY);
@@ -28,8 +27,7 @@ export async function saveData() {
 
 export function isEnabledForChannel(channelId: string): boolean {
     if (!pluginData.globalEnabled) return false;
-    const ch = pluginData.channelEnabled[channelId];
-    return ch !== false;
+    return pluginData.channelEnabled[channelId] !== false;
 }
 
 function applyFakesToMessages(channelId: string, messages: any[]): any[] {
@@ -75,7 +73,7 @@ function applyFakesToMessages(channelId: string, messages: any[]): any[] {
     return result;
 }
 
-function buildFakeMessage(entry: FakeMessageEntry, channelId: string): any | null {
+function buildFakeMessage(entry: FakeMessageEntry, channelId: string): any {
     const me = UserStore.getCurrentUser();
     return {
         id: entry.id,
@@ -105,9 +103,18 @@ function buildFakeMessage(entry: FakeMessageEntry, channelId: string): any | nul
     };
 }
 
-function handleLoadMessagesSuccess(payload: any) {
-    if (!payload?.messages || !payload?.channelId) return;
-    payload.messages = applyFakesToMessages(payload.channelId, payload.messages);
+/**
+ * Intercepts BEFORE stores process the action — returns a new object,
+ * never mutates. This avoids the "has only a getter" crash entirely.
+ */
+function fakeMessagesInterceptor(action: any) {
+    if (action.type !== "LOAD_MESSAGES_SUCCESS") return;
+    if (!action.messages || !action.channelId) return;
+
+    const modified = applyFakesToMessages(action.channelId, action.messages);
+    if (modified === action.messages) return;
+
+    return { ...action, messages: modified };
 }
 
 const messageContextMenuPatch: NavContextMenuPatchCallback = (children, props) => {
@@ -117,20 +124,15 @@ const messageContextMenuPatch: NavContextMenuPatchCallback = (children, props) =
 
     children.push(
         <Menu.MenuSeparator key="fake-sep" />,
-        <Menu.MenuGroup
-            key="fake-group"
-            label="Fake Messages"
-        >
+        <Menu.MenuGroup key="fake-group" label="Fake Messages">
             <Menu.MenuItem
                 key="fake-edit"
                 id="fake-edit"
                 label="✏️ Edit This Message (Fake)"
-                action={() => {
-                    openFakeMessagesModal(channelId, {
-                        prefill: "modify",
-                        targetMessage: message,
-                    });
-                }}
+                action={() => openFakeMessagesModal(channelId, {
+                    prefill: "modify",
+                    targetMessage: message,
+                })}
             />
             <Menu.MenuItem
                 key="fake-hide"
@@ -138,10 +140,10 @@ const messageContextMenuPatch: NavContextMenuPatchCallback = (children, props) =
                 label="🙈 Hide This Message (Fake)"
                 action={async () => {
                     if (!pluginData.entries[channelId]) pluginData.entries[channelId] = [];
-                    const existing = pluginData.entries[channelId].find(
+                    const alreadyHidden = pluginData.entries[channelId].some(
                         e => e.type === "hide" && e.originalId === message.id
                     );
-                    if (!existing) {
+                    if (!alreadyHidden) {
                         pluginData.entries[channelId].push({
                             id: `fake_hide_${Date.now()}`,
                             type: "hide",
@@ -156,12 +158,10 @@ const messageContextMenuPatch: NavContextMenuPatchCallback = (children, props) =
                 key="fake-add-after"
                 id="fake-add-after"
                 label="➕ Add Fake Message After This"
-                action={() => {
-                    openFakeMessagesModal(channelId, {
-                        prefill: "add",
-                        insertAfter: message.id,
-                    });
-                }}
+                action={() => openFakeMessagesModal(channelId, {
+                    prefill: "add",
+                    insertAfter: message.id,
+                })}
             />
             <Menu.MenuItem
                 key="fake-manager"
@@ -188,52 +188,11 @@ const channelContextMenuPatch: NavContextMenuPatchCallback = (children, props) =
     );
 };
 
-function ChatBarIcon({ isMainChat }: { isMainChat?: boolean; }) {
-    if (!isMainChat) return null;
-    const channelId = SelectedChannelStore.getChannelId();
-    if (!channelId) return null;
-
-    const enabled = isEnabledForChannel(channelId);
-
-    return (
-        <Tooltip text="Fake Messages Manager">
-            {({ onMouseEnter, onMouseLeave }: any) => (
-                <div
-                    onMouseEnter={onMouseEnter}
-                    onMouseLeave={onMouseLeave}
-                    style={{ cursor: "pointer", display: "flex", alignItems: "center", padding: "0 4px" }}
-                    onClick={() => openFakeMessagesModal(channelId, {})}
-                >
-                    <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        style={{ opacity: enabled ? 1 : 0.4 }}
-                    >
-                        <path
-                            fill="currentColor"
-                            d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"
-                        />
-                        <circle cx="18" cy="6" r="5" fill="#f04747" />
-                    </svg>
-                </div>
-            )}
-        </Tooltip>
-    );
-}
-
 export function reloadChannel(channelId: string) {
     const ch = ChannelStore.getChannel(channelId);
-    const currentChannelId = SelectedChannelStore.getChannelId();
+    if (SelectedChannelStore.getChannelId() !== channelId) return;
 
-    if (currentChannelId !== channelId) return;
-
-    FluxDispatcher.dispatch({
-        type: "CHANNEL_SELECT",
-        channelId: null,
-        guildId: null,
-    });
+    FluxDispatcher.dispatch({ type: "CHANNEL_SELECT", channelId: null, guildId: null });
 
     setTimeout(() => {
         FluxDispatcher.dispatch({
@@ -254,29 +213,23 @@ export default ({
     async start() {
         await loadData();
 
-        FluxDispatcher.subscribe("LOAD_MESSAGES_SUCCESS", handleLoadMessagesSuccess);
+        // intercept() fires BEFORE stores — returns new object, never mutates
+        interceptDispose = (FluxDispatcher as any).intercept(fakeMessagesInterceptor);
 
         addContextMenuPatch("message", messageContextMenuPatch);
         addContextMenuPatch("channel-context", channelContextMenuPatch);
         addContextMenuPatch("gdm-context", channelContextMenuPatch);
         addContextMenuPatch("user-context", channelContextMenuPatch);
-
-        try {
-            ChatBarAPI?.addChatBarButton?.("FakeMessages", ChatBarIcon);
-        } catch (_) {}
     },
 
     stop() {
-        FluxDispatcher.unsubscribe("LOAD_MESSAGES_SUCCESS", handleLoadMessagesSuccess);
+        interceptDispose?.();
+        interceptDispose = null;
 
         removeContextMenuPatch("message", messageContextMenuPatch);
         removeContextMenuPatch("channel-context", channelContextMenuPatch);
         removeContextMenuPatch("gdm-context", channelContextMenuPatch);
         removeContextMenuPatch("user-context", channelContextMenuPatch);
-
-        try {
-            ChatBarAPI?.removeChatBarButton?.("FakeMessages");
-        } catch (_) {}
     },
 
     settingsAboutComponent() {
@@ -298,8 +251,8 @@ export default ({
                 </Switch>
                 <Forms.FormDivider />
                 <Forms.FormText type={Forms.FormText.Types.DESCRIPTION}>
-                    Right-click any message for quick edit/hide/add options.
-                    Right-click any channel in the sidebar to open the full manager.
+                    Right-click any message → Edit / Hide / Add fake message.{"\n"}
+                    Right-click any channel in the sidebar → Fake Messages Manager.
                 </Forms.FormText>
             </Forms.FormSection>
         );
