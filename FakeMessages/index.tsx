@@ -187,7 +187,9 @@ export default ({
 
     async start() {
         await loadData();
-        interceptDispose = (FluxDispatcher as any).intercept(fakeMessagesInterceptor);
+        try {
+            interceptDispose = (FluxDispatcher as any).intercept?.(fakeMessagesInterceptor) ?? null;
+        } catch (_) {}
         addContextMenuPatch("message", messageContextMenuPatch);
         addContextMenuPatch("channel-context", channelContextMenuPatch);
         addContextMenuPatch("gdm-context", channelContextMenuPatch);
@@ -218,7 +220,7 @@ export default ({
                     Enable Fake Messages Globally
                 </Switch>
                 <Forms.FormDivider style={{ margin: "12px 0" }} />
-                <Forms.FormText type={Forms.FormText.Types.DESCRIPTION}>
+                <Forms.FormText>
                     • Right-click any message → Edit / Hide / Insert fake{"\n"}
                     • Right-click any channel in the sidebar → Fake Messages
                 </Forms.FormText>

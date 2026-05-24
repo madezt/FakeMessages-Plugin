@@ -212,7 +212,7 @@ function EntryEditor({ initial, onSave, onCancel, targetMessage }: {
                         onChange={(v: string) => update({ originalId: v.trim() || undefined })}
                     />
                     {!entry.originalId?.trim() && (
-                        <Forms.FormText type={Forms.FormText.Types.DESCRIPTION} style={{ color: "var(--status-danger, #ed4245)", marginTop: "4px" }}>
+                        <Forms.FormText style={{ color: "var(--status-danger, #ed4245)", marginTop: "4px" }}>
                             Required — right-click a message → "Edit/Hide Message (Fake)" to auto-fill this.
                         </Forms.FormText>
                     )}
@@ -228,7 +228,7 @@ function EntryEditor({ initial, onSave, onCancel, targetMessage }: {
                             value={entry.authorUsername ?? ""}
                             onChange={(v: string) => update({ authorUsername: v || undefined })}
                         />
-                        <Forms.FormText type={Forms.FormText.Types.DESCRIPTION}>
+                        <Forms.FormText>
                             Leave blank to use your name.
                         </Forms.FormText>
                     </div>
@@ -283,7 +283,7 @@ function EntryEditor({ initial, onSave, onCancel, targetMessage }: {
                         style={S.textarea(textareaFocused)}
                     />
                     {entry.type === "add" && !entry.content?.trim() && (
-                        <Forms.FormText type={Forms.FormText.Types.DESCRIPTION} style={{ color: "var(--status-danger, #ed4245)", marginTop: "4px" }}>
+                        <Forms.FormText style={{ color: "var(--status-danger, #ed4245)", marginTop: "4px" }}>
                             Required.
                         </Forms.FormText>
                     )}
@@ -298,7 +298,7 @@ function EntryEditor({ initial, onSave, onCancel, targetMessage }: {
                         value={entry.timestamp ?? ""}
                         onChange={(v: string) => update({ timestamp: v.trim() || undefined })}
                     />
-                    <Forms.FormText type={Forms.FormText.Types.DESCRIPTION}>
+                    <Forms.FormText>
                         ISO 8601 — e.g. {new Date().toISOString().slice(0, 19)}Z. Leave blank for current time.
                     </Forms.FormText>
                 </div>

@@ -1,59 +1,49 @@
 # 🎭 FakeMessages — Vencord / Equicord Plugin
 
-A fully client-side plugin that lets you **visually add, edit, or hide Discord messages** in any channel — DMs, server channels, group DMs. Changes are saved locally and survive refreshes. Nothing is ever sent to Discord's servers.
+A fully client-side plugin that lets you **visually add, edit, or hide Discord messages** in any channel — DMs, server channels, and group DMs. All changes are saved locally and survive refreshes. Nothing is ever sent to Discord's servers.
 
-> ⚠️ **This is purely visual/local.** Other users see the real messages. This only affects what *you* see in your own client.
-
----
-
-## ✨ Features
-
-| Feature | Details |
-|---|---|
-| ➕ Add fake messages | Inject messages from any user (or yourself) anywhere in a channel |
-| ✏️ Edit messages | Change the displayed content or author name of any message |
-| 🙈 Hide messages | Remove any message from your view |
-| 💾 Persistent storage | All changes survive page refreshes and Discord restarts |
-| 🔘 Global toggle | One master switch to enable/disable everything |
-| 🔘 Per-channel toggle | Independently enable/disable per DM or channel |
-| 🖱️ Right-click menu | Quick edit/hide directly from the message context menu |
-| 💬 Chat bar button | Icon in the chat bar opens the full manager for that channel |
-| 🎨 Clean UI | Dark-theme modal with tabs, entry cards, and inline editing |
+> ⚠️ **Purely visual and local.** Other users always see the real messages. This only affects what *you* see in your own client.
 
 ---
 
-## 📦 Installation
+## Features
+
+| | Feature | Details |
+|---|---|---|
+| ➕ | Add fake messages | Inject messages from any user anywhere in a channel |
+| ✏️ | Edit messages | Change the displayed content or author name of any message |
+| 🙈 | Hide messages | Remove any message from your view |
+| 💾 | Persistent storage | All changes survive page refreshes and Discord restarts |
+| 🌐 | Global toggle | One master switch to enable/disable everything |
+| 🔘 | Per-channel toggle | Independently enable/disable per DM or channel |
+| 🖱️ | Right-click menu | Quick edit/hide/add directly from the message context menu |
+| 🗂️ | Full manager UI | Tabbed modal with entry cards, inline editing, and clear-all |
+
+---
+
+## Installation
 
 ### Prerequisites
 
-You need **Vencord** or **Equicord** installed on Discord Desktop or Web.
+You need **Vencord** or **Equicord** installed on Discord Desktop.
 
-- Vencord: https://vencord.dev/
+- Vencord: https://vencord.dev
 - Equicord: https://github.com/Equicord/Equicord
 
 ---
 
-### Method 1 — UserPlugin (Recommended)
-
-UserPlugins let you add custom plugins without modifying Vencord/Equicord's core files.
-
-**Step 1 — Enable UserPlugins in Vencord/Equicord**
-
-Open Discord → Settings → Vencord (or Equicord) → scroll down and enable **"Enable UserPlugins"** if it isn't already.
-
-**Step 2 — Find your UserPlugins folder**
+### Step 1 — Locate your userplugins folder
 
 | Platform | Path |
 |---|---|
-| Windows | `%APPDATA%\Vencord\src\userplugins\` |
-| macOS | `~/.config/Vencord/src/userplugins/` |
-| Linux | `~/.config/Vencord/src/userplugins/` |
-| Equicord Windows | `%APPDATA%\Equicord\src\userplugins\` |
-| Equicord macOS/Linux | `~/.config/Equicord/src/userplugins/` |
+| Vencord — Windows | `%APPDATA%\Vencord\src\userplugins\` |
+| Vencord — macOS / Linux | `~/.config/Vencord/src/userplugins/` |
+| Equicord — Windows | `%APPDATA%\Equicord\src\userplugins\` |
+| Equicord — macOS / Linux | `~/.config/Equicord/src/userplugins/` |
 
 If the `userplugins` folder doesn't exist, create it.
 
-**Step 3 — Copy the plugin**
+### Step 2 — Copy the plugin folder
 
 Copy the entire `FakeMessages` folder into your `userplugins` directory:
 
@@ -65,221 +55,139 @@ userplugins/
     └── FakeMessagesModal.tsx
 ```
 
-**Step 4 — Rebuild Vencord/Equicord**
+### Step 3 — Build and inject
 
-Open a terminal in your Vencord/Equicord directory and run:
+Open a terminal in your Vencord/Equicord directory:
 
 ```bash
 pnpm build
-```
-
-If the build succeeds with no errors, then run:
-
-```bash
 pnpm inject
 ```
 
-**Step 5 — Enable the plugin**
+### Step 4 — Enable the plugin
 
 1. Open Discord
-2. Go to **Settings → Plugins** (Vencord) or **Settings → Equicord → Plugins**
-3. Search for **"FakeMessages"**
+2. Go to **Settings → Plugins**
+3. Search for **FakeMessages**
 4. Toggle it **ON**
 5. Reload Discord (`Ctrl+R` / `Cmd+R`)
 
 ---
 
-### Method 2 — Dev Mode (for development/testing)
+## How to Use
 
-```bash
-# Clone Vencord
-git clone https://github.com/Vendicated/Vencord
-cd Vencord
-pnpm install
+### Right-click a message
 
-# Copy plugin
-cp -r /path/to/FakeMessages src/plugins/FakeMessages
+Right-click any message → scroll to the **Fake Messages** group:
 
-# Build in watch mode
-pnpm watch
-```
+| Option | What it does |
+|---|---|
+| ✏️ Edit Message (Fake) | Opens the editor pre-filled with that message's content |
+| 🙈 Hide Message (Fake) | Instantly removes it from your view |
+| ➕ Insert Fake Message After This | Opens the editor to add a new fake message right below it |
+| 🗂️ Manage Fake Messages | Opens the full manager for that channel |
 
-Then inject with `pnpm inject`.
+### Right-click a channel
 
----
-
-## 🚀 How to Use
-
-### Opening the Manager
-
-**Option A — Chat Bar Button**
-
-A small 💬 icon appears in the message input bar of every channel. Click it to open the Fake Messages Manager for that channel.
-
-**Option B — Right-click a message**
-
-Right-click any message → scroll down to the **"Fake Messages"** section:
-
-- **✏️ Edit This Message (Fake)** — opens the editor pre-filled with that message
-- **🙈 Hide This Message (Fake)** — instantly hides it from your view
-- **➕ Add Fake Message After This** — adds a new fake message right after it
-- **🗂️ Open Fake Message Manager** — opens the full manager
-
-**Option C — Right-click a channel**
-
-Right-click any channel in the sidebar → **"🎭 Fake Messages Manager"**
+Right-click any channel or DM in the sidebar → **🎭 Fake Messages** to open the manager.
 
 ---
 
-### Adding a Fake Message
+### Adding a fake message
 
-1. Open the manager → click **"➕ New Entry"**
-2. Select type: **Add Message**
+1. Open the manager → click **✚ New Entry**
+2. Select type **Add**
 3. Fill in:
-   - **Author Name** — whose name shows (blank = yours)
-   - **Author User ID** — paste their Discord user ID for their avatar (optional)
-   - **Timestamp** — when it appears (blank = now)
-   - **Insert After** — paste a message ID to place it after a specific message
-   - **Content** — the message text
-4. Click **Save**
+   - **Author Name** — whose name to show (blank = yours)
+   - **Author User ID** — paste their Discord ID for their avatar (optional)
+   - **Insert After Message ID** — place it after a specific message (optional, blank = append at bottom)
+   - **Content** — the message text (required)
+   - **Timestamp** — ISO 8601 format, e.g. `2026-01-01T12:00:00Z` (optional, blank = now)
+4. Click **Save Changes**
 
-### Editing a Message
+### Editing a message (fake)
 
-1. Right-click a message → **"✏️ Edit This Message (Fake)"**
-2. Change the content and/or author display name
-3. Click **Save**
+1. Right-click a message → **✏️ Edit Message (Fake)**  
+   The message ID is auto-filled.
+2. Change the content and/or the displayed author name
+3. Click **Save Changes**
 
-The original message ID is auto-filled. Only *your view* changes.
+### Hiding a message
 
-### Hiding a Message
+Right-click a message → **🙈 Hide Message (Fake)**
 
-Right-click a message → **🙈 Hide This Message (Fake)**
-
-It disappears from your view instantly. The entry appears in the manager where you can remove it to restore the message.
-
----
-
-## 🔘 Toggles
-
-### Global Toggle
-
-- In the plugin settings page (Settings → Plugins → FakeMessages → Settings)
-- Or in the footer of the Fake Messages Manager modal
-
-When **OFF**, all fakes are disabled everywhere.
-
-### Per-Channel Toggle
-
-In the Fake Messages Manager modal for any channel, there's a **channel-level toggle** in the header. When **OFF** for that channel, fakes are disabled only for that channel even if the global toggle is ON.
+It disappears instantly. The hide entry appears in the manager — delete it there to restore the message.
 
 ---
 
-## 💾 How Data is Saved
+## Toggles
 
-All fake message data is saved using Vencord/Equicord's built-in **DataStore** (IndexedDB under the hood). The key is `FakeMessages_v1`.
+### Global toggle
 
-Data persists through:
-- ✅ Page refreshes
-- ✅ Discord restarts
-- ✅ Switching channels and back
-- ❌ Reinstalling Discord (clears IndexedDB)
-- ❌ Uninstalling Vencord (clears plugin data)
+Found in the plugin settings page (**Settings → Plugins → FakeMessages**) and in the footer of every manager modal. When **OFF**, all fakes are hidden everywhere regardless of per-channel settings.
+
+### Per-channel toggle
+
+Inside the manager modal for any channel, the toggle in the header controls that channel only. When **OFF** for a channel, fakes are disabled for it even if the global toggle is ON.
 
 ---
 
-## 🔍 Finding Message IDs & User IDs
+## Data storage
 
-To get a **Message ID** or **User ID**, you need Discord's Developer Mode:
+All data is stored locally using Vencord/Equicord's built-in **DataStore** (IndexedDB). The storage key is `FakeMessages_v1`.
 
-1. Settings → Advanced → **Developer Mode** → ON
+| Survives | ✅ / ❌ |
+|---|---|
+| Page refreshes | ✅ |
+| Discord restarts | ✅ |
+| Switching channels and back | ✅ |
+| Reinstalling Discord | ❌ (clears IndexedDB) |
+| Uninstalling Vencord/Equicord | ❌ (clears plugin data) |
+
+---
+
+## Finding message IDs and user IDs
+
+Enable Discord's **Developer Mode** first:
+
+1. **Settings → Advanced → Developer Mode → ON**
 2. Right-click a message → **Copy Message ID**
 3. Right-click a username → **Copy User ID**
 
 ---
 
-## ⚙️ Data Structure
-
-The plugin stores data in this format:
-
-```json
-{
-  "globalEnabled": true,
-  "channelEnabled": {
-    "CHANNEL_ID": true
-  },
-  "entries": {
-    "CHANNEL_ID": [
-      {
-        "id": "fake_add_1234567890_abc",
-        "type": "add",
-        "authorId": "123456789",
-        "authorUsername": "someuser",
-        "content": "This is a fake message",
-        "timestamp": "2026-01-01T12:00:00.000Z",
-        "insertAfter": "MESSAGE_ID"
-      },
-      {
-        "id": "fake_modify_9876543210_xyz",
-        "type": "modify",
-        "originalId": "ORIGINAL_MESSAGE_ID",
-        "content": "Edited content"
-      },
-      {
-        "id": "fake_hide_1111111111_def",
-        "type": "hide",
-        "originalId": "MESSAGE_ID_TO_HIDE"
-      }
-    ]
-  }
-}
-```
-
----
-
-## 🛠️ Troubleshooting
-
-**Plugin doesn't appear in the plugins list**
-- Make sure the folder is named exactly `FakeMessages`
-- Rebuild Vencord: `pnpm build` in the Vencord directory
-- Check the DevTools console (Ctrl+Shift+I) for build errors
-
-**Fake messages disappear after switching channels**
-- This is expected — messages reload from Discord when you switch channels
-- The plugin re-applies your fakes on every `LOAD_MESSAGES_SUCCESS` dispatch
-- Make sure the plugin is enabled and the channel toggle is ON
-
-**Context menu items don't appear**
-- Make sure `ContextMenuAPI` is enabled in Vencord settings
-- Try reloading Discord
-
-**Chat bar button missing**
-- The chat bar button is loaded at runtime via webpack. If your version of Equicord/Vencord has `ChatBarAPI`, it will appear automatically. If not, all features are still available via right-click menus.
-
----
-
-## 📁 File Structure
+## File structure
 
 ```
 FakeMessages/
-├── index.tsx              # Main plugin — Flux patching, context menus, chat bar button
-├── FakeMessageStore.ts    # TypeScript types and DataStore helpers
-├── FakeMessagesModal.tsx  # Full React UI modal for managing fake messages
-└── (this README.md goes in the repo root or alongside the folder)
+├── index.tsx              # Plugin entry — Flux intercept, context menus, data loading
+├── FakeMessageStore.ts    # Types, interfaces, and DataStore helper functions
+└── FakeMessagesModal.tsx  # Full React UI modal for managing fake messages
 ```
 
 ---
 
-## 📜 License
+## Troubleshooting
 
-MIT — do whatever you want with this.
+**Plugin doesn't appear in the plugins list**
+- Make sure the folder is named exactly `FakeMessages` (case-sensitive)
+- Run `pnpm build` and check for TypeScript errors in the output
+- Open DevTools (`Ctrl+Shift+I`) and check the Console for errors
+
+**Fake messages aren't showing up**
+- Check that the global toggle is ON (plugin settings or modal footer)
+- Check that the per-channel toggle is ON (top of the manager modal)
+- Try switching to another channel and back — this triggers a fresh `LOAD_MESSAGES_SUCCESS`
+
+**Context menu items don't appear**
+- Make sure the **ContextMenuAPI** plugin is enabled in your Vencord/Equicord settings
+- Rebuild (`pnpm build`) and re-inject (`pnpm inject`), then reload Discord
+
+**"Cannot read properties of undefined" error in settings**
+- Rebuild the plugin — an older cached build may be running
 
 ---
 
-## 💡 Suggested Future Additions
+## License
 
-- **Import/Export** — export your fake message data as JSON for backup or sharing
-- **Fake reactions** — add emoji reactions that only you see
-- **Fake embeds** — inject rich embeds below messages
-- **Fake pins** — mark messages as pinned in your view
-- **Scheduled fakes** — have fake messages appear at a specific time
-- **Templates** — save common fake message templates for reuse
+MIT — use, modify, and distribute freely.
