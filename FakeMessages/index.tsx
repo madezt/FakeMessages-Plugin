@@ -1,4 +1,3 @@
-import definePlugin from "@utils/definePlugin";
 import { findByPropsLazy } from "@webpack";
 import { React, FluxDispatcher, ChannelStore, UserStore, SelectedChannelStore } from "@webpack/common";
 import { addContextMenuPatch, removeContextMenuPatch, NavContextMenuPatchCallback } from "@api/ContextMenu";
@@ -245,7 +244,7 @@ export function reloadChannel(channelId: string) {
     }, 80);
 }
 
-export default definePlugin({
+export default ({
     name: "FakeMessages",
     description: "Visually fake Discord messages — add, edit, or hide messages per channel. Changes persist across refreshes. For Equicord/Vencord.",
     authors: [{ name: "FakeMessages Plugin", id: 0n }],
