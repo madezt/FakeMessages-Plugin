@@ -1,17 +1,8 @@
-import { findByPropsLazy } from "@webpack";
 import { React, UserStore, ChannelStore } from "@webpack/common";
 import { Forms, Button, TextInput, Switch, Text, Tooltip, ScrollerThin } from "@webpack/common";
+import { openModal, ModalRoot, ModalHeader, ModalContent, ModalFooter, ModalCloseButton } from "@webpack/common";
 import { pluginData, saveData, reloadChannel } from "./index";
 import { FakeMessageEntry, FakeEntryType, createEmptyEntry, removeEntry, upsertEntry, getEntriesForChannel } from "./FakeMessageStore";
-
-const ModalAPI = findByPropsLazy("openModal", "closeModal");
-const MC = findByPropsLazy("ModalRoot", "ModalContent", "ModalFooter");
-
-const ModalRoot = (p: any) => React.createElement(MC.ModalRoot, p);
-const ModalHeader = (p: any) => React.createElement(MC.ModalHeader, p);
-const ModalContent = (p: any) => React.createElement(MC.ModalContent, p);
-const ModalFooter = (p: any) => React.createElement(MC.ModalFooter, p);
-const ModalCloseButton = (p: any) => React.createElement(MC.ModalCloseButton, p);
 
 interface OpenOptions {
     prefill?: "add" | "modify";
@@ -546,7 +537,7 @@ function FakeMessagesModalContent({ channelId, options }: { channelId: string; o
 }
 
 export function openFakeMessagesModal(channelId: string, options: OpenOptions) {
-    ModalAPI.openModal((props: any) => (
+    openModal((props: any) => (
         <ModalRoot {...props} size="MEDIUM">
             <ModalHeader separator={false} style={{ padding: "16px 20px 12px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px", flex: 1 }}>
