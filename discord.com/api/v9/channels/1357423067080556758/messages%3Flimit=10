@@ -1,0 +1,410 @@
+[
+    {
+        "type": 0,
+        "content": "i remember doing them before without plugin but i want it to make it easier",
+        "mentions": [],
+        "mention_roles": [],
+        "attachments": [],
+        "embeds": [],
+        "timestamp": "2026-05-24T16:04:39.972000+00:00",
+        "edited_timestamp": null,
+        "flags": 0,
+        "components": [],
+        "id": "1508138674959683695",
+        "channel_id": "1357423067080556758",
+        "author": {
+            "id": "850470000225288192",
+            "username": "madezt",
+            "avatar": "c734d35e32bf3a4c9d7b6da58b6ecaef",
+            "discriminator": "0",
+            "public_flags": 0,
+            "flags": 0,
+            "banner": null,
+            "accent_color": null,
+            "global_name": null,
+            "avatar_decoration_data": null,
+            "collectibles": null,
+            "display_name_styles": null,
+            "banner_color": null,
+            "clan": null,
+            "primary_guild": null
+        },
+        "pinned": false,
+        "mention_everyone": false,
+        "tts": false
+    },
+    {
+        "type": 0,
+        "content": "that fakes messages",
+        "mentions": [],
+        "mention_roles": [],
+        "attachments": [],
+        "embeds": [],
+        "timestamp": "2026-05-24T16:04:23.404000+00:00",
+        "edited_timestamp": null,
+        "flags": 0,
+        "components": [],
+        "id": "1508138605468717126",
+        "channel_id": "1357423067080556758",
+        "author": {
+            "id": "850470000225288192",
+            "username": "madezt",
+            "avatar": "c734d35e32bf3a4c9d7b6da58b6ecaef",
+            "discriminator": "0",
+            "public_flags": 0,
+            "flags": 0,
+            "banner": null,
+            "accent_color": null,
+            "global_name": null,
+            "avatar_decoration_data": null,
+            "collectibles": null,
+            "display_name_styles": null,
+            "banner_color": null,
+            "clan": null,
+            "primary_guild": null
+        },
+        "pinned": false,
+        "mention_everyone": false,
+        "tts": false
+    },
+    {
+        "type": 0,
+        "content": "",
+        "mentions": [],
+        "mention_roles": [],
+        "attachments": [],
+        "embeds": [],
+        "timestamp": "2026-05-24T15:19:55.059000+00:00",
+        "edited_timestamp": null,
+        "flags": 0,
+        "components": [],
+        "sticker_items": [
+            {
+                "id": "1489325893091590355",
+                "name": "elliememe gg/wrd",
+                "format_type": 4
+            }
+        ],
+        "id": "1508127413618479254",
+        "channel_id": "1357423067080556758",
+        "author": {
+            "id": "1246814207609929789",
+            "username": "luckizxx",
+            "avatar": "9f614ec819b888d8bbdac81c0ed4cc4f",
+            "discriminator": "0",
+            "public_flags": 64,
+            "flags": 64,
+            "banner": null,
+            "accent_color": null,
+            "global_name": "\u0668",
+            "avatar_decoration_data": {
+                "asset": "a_c86b11a49bb8057ce9c974a6f7ad658a",
+                "sku_id": "1333866045236314327",
+                "expires_at": null
+            },
+            "collectibles": {
+                "nameplate": {
+                    "sku_id": "1349849614311751731",
+                    "asset": "nameplates/nameplates/angels/",
+                    "label": "COLLECTIBLES_NAMEPLATES_ANGELS_A11Y",
+                    "palette": "bubble_gum"
+                }
+            },
+            "display_name_styles": {
+                "font_id": 4,
+                "effect_id": 2,
+                "colors": [
+                    16095292,
+                    15031015
+                ]
+            },
+            "banner_color": null,
+            "clan": null,
+            "primary_guild": null
+        },
+        "pinned": false,
+        "mention_everyone": false,
+        "tts": false
+    },
+    {
+        "type": 0,
+        "content": "",
+        "mentions": [],
+        "mention_roles": [],
+        "attachments": [],
+        "embeds": [],
+        "timestamp": "2026-05-24T13:26:31.004000+00:00",
+        "edited_timestamp": null,
+        "flags": 0,
+        "components": [],
+        "sticker_items": [
+            {
+                "id": "1439597675304714401",
+                "name": "mbappe",
+                "format_type": 1
+            }
+        ],
+        "id": "1508098875343372459",
+        "channel_id": "1357423067080556758",
+        "author": {
+            "id": "850470000225288192",
+            "username": "madezt",
+            "avatar": "c734d35e32bf3a4c9d7b6da58b6ecaef",
+            "discriminator": "0",
+            "public_flags": 0,
+            "flags": 0,
+            "banner": null,
+            "accent_color": null,
+            "global_name": null,
+            "avatar_decoration_data": null,
+            "collectibles": null,
+            "display_name_styles": null,
+            "banner_color": null,
+            "clan": null,
+            "primary_guild": null
+        },
+        "pinned": false,
+        "mention_everyone": false,
+        "tts": false
+    },
+    {
+        "type": 0,
+        "content": "<:__:1487109199036022804>",
+        "mentions": [],
+        "mention_roles": [],
+        "attachments": [],
+        "embeds": [],
+        "timestamp": "2026-05-24T13:26:07.721000+00:00",
+        "edited_timestamp": null,
+        "flags": 0,
+        "components": [],
+        "id": "1508098777687261305",
+        "channel_id": "1357423067080556758",
+        "author": {
+            "id": "1246814207609929789",
+            "username": "luckizxx",
+            "avatar": "9f614ec819b888d8bbdac81c0ed4cc4f",
+            "discriminator": "0",
+            "public_flags": 64,
+            "flags": 64,
+            "banner": null,
+            "accent_color": null,
+            "global_name": "\u0668",
+            "avatar_decoration_data": {
+                "asset": "a_c86b11a49bb8057ce9c974a6f7ad658a",
+                "sku_id": "1333866045236314327",
+                "expires_at": null
+            },
+            "collectibles": {
+                "nameplate": {
+                    "sku_id": "1349849614311751731",
+                    "asset": "nameplates/nameplates/angels/",
+                    "label": "COLLECTIBLES_NAMEPLATES_ANGELS_A11Y",
+                    "palette": "bubble_gum"
+                }
+            },
+            "display_name_styles": {
+                "font_id": 4,
+                "effect_id": 2,
+                "colors": [
+                    16095292,
+                    15031015
+                ]
+            },
+            "banner_color": null,
+            "clan": null,
+            "primary_guild": null
+        },
+        "pinned": false,
+        "mention_everyone": false,
+        "tts": false
+    },
+    {
+        "type": 0,
+        "content": "not for everyone",
+        "mentions": [],
+        "mention_roles": [],
+        "attachments": [],
+        "embeds": [],
+        "timestamp": "2026-05-24T13:26:00.432000+00:00",
+        "edited_timestamp": "2026-05-24T13:26:04.183000+00:00",
+        "flags": 0,
+        "components": [],
+        "id": "1508098747115110583",
+        "channel_id": "1357423067080556758",
+        "author": {
+            "id": "850470000225288192",
+            "username": "madezt",
+            "avatar": "c734d35e32bf3a4c9d7b6da58b6ecaef",
+            "discriminator": "0",
+            "public_flags": 0,
+            "flags": 0,
+            "banner": null,
+            "accent_color": null,
+            "global_name": null,
+            "avatar_decoration_data": null,
+            "collectibles": null,
+            "display_name_styles": null,
+            "banner_color": null,
+            "clan": null,
+            "primary_guild": null
+        },
+        "pinned": false,
+        "mention_everyone": false,
+        "tts": false
+    },
+    {
+        "type": 0,
+        "content": "it was a joke for us",
+        "mentions": [],
+        "mention_roles": [],
+        "attachments": [],
+        "embeds": [],
+        "timestamp": "2026-05-24T13:25:56.975000+00:00",
+        "edited_timestamp": null,
+        "flags": 0,
+        "components": [],
+        "id": "1508098732615536722",
+        "channel_id": "1357423067080556758",
+        "author": {
+            "id": "850470000225288192",
+            "username": "madezt",
+            "avatar": "c734d35e32bf3a4c9d7b6da58b6ecaef",
+            "discriminator": "0",
+            "public_flags": 0,
+            "flags": 0,
+            "banner": null,
+            "accent_color": null,
+            "global_name": null,
+            "avatar_decoration_data": null,
+            "collectibles": null,
+            "display_name_styles": null,
+            "banner_color": null,
+            "clan": null,
+            "primary_guild": null
+        },
+        "pinned": false,
+        "mention_everyone": false,
+        "tts": false
+    },
+    {
+        "type": 0,
+        "content": "\ud83d\ude2d",
+        "mentions": [],
+        "mention_roles": [],
+        "attachments": [],
+        "embeds": [],
+        "timestamp": "2026-05-24T13:25:51.697000+00:00",
+        "edited_timestamp": null,
+        "flags": 0,
+        "components": [],
+        "id": "1508098710477996032",
+        "channel_id": "1357423067080556758",
+        "author": {
+            "id": "850470000225288192",
+            "username": "madezt",
+            "avatar": "c734d35e32bf3a4c9d7b6da58b6ecaef",
+            "discriminator": "0",
+            "public_flags": 0,
+            "flags": 0,
+            "banner": null,
+            "accent_color": null,
+            "global_name": null,
+            "avatar_decoration_data": null,
+            "collectibles": null,
+            "display_name_styles": null,
+            "banner_color": null,
+            "clan": null,
+            "primary_guild": null
+        },
+        "pinned": false,
+        "mention_everyone": false,
+        "tts": false
+    },
+    {
+        "type": 0,
+        "content": "yala",
+        "mentions": [],
+        "mention_roles": [],
+        "attachments": [],
+        "embeds": [],
+        "timestamp": "2026-05-24T13:21:06.189000+00:00",
+        "edited_timestamp": null,
+        "flags": 0,
+        "components": [],
+        "id": "1508097512970391702",
+        "channel_id": "1357423067080556758",
+        "author": {
+            "id": "1246814207609929789",
+            "username": "luckizxx",
+            "avatar": "9f614ec819b888d8bbdac81c0ed4cc4f",
+            "discriminator": "0",
+            "public_flags": 64,
+            "flags": 64,
+            "banner": null,
+            "accent_color": null,
+            "global_name": "\u0668",
+            "avatar_decoration_data": {
+                "asset": "a_c86b11a49bb8057ce9c974a6f7ad658a",
+                "sku_id": "1333866045236314327",
+                "expires_at": null
+            },
+            "collectibles": {
+                "nameplate": {
+                    "sku_id": "1349849614311751731",
+                    "asset": "nameplates/nameplates/angels/",
+                    "label": "COLLECTIBLES_NAMEPLATES_ANGELS_A11Y",
+                    "palette": "bubble_gum"
+                }
+            },
+            "display_name_styles": {
+                "font_id": 4,
+                "effect_id": 2,
+                "colors": [
+                    16095292,
+                    15031015
+                ]
+            },
+            "banner_color": null,
+            "clan": null,
+            "primary_guild": null
+        },
+        "pinned": false,
+        "mention_everyone": false,
+        "tts": false
+    },
+    {
+        "type": 0,
+        "content": "js delete it",
+        "mentions": [],
+        "mention_roles": [],
+        "attachments": [],
+        "embeds": [],
+        "timestamp": "2026-05-24T13:20:59.178000+00:00",
+        "edited_timestamp": null,
+        "flags": 0,
+        "components": [],
+        "id": "1508097483564253274",
+        "channel_id": "1357423067080556758",
+        "author": {
+            "id": "850470000225288192",
+            "username": "madezt",
+            "avatar": "c734d35e32bf3a4c9d7b6da58b6ecaef",
+            "discriminator": "0",
+            "public_flags": 0,
+            "flags": 0,
+            "banner": null,
+            "accent_color": null,
+            "global_name": null,
+            "avatar_decoration_data": null,
+            "collectibles": null,
+            "display_name_styles": null,
+            "banner_color": null,
+            "clan": null,
+            "primary_guild": null
+        },
+        "pinned": false,
+        "mention_everyone": false,
+        "tts": false
+    }
+]
