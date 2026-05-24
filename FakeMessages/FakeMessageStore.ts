@@ -3,9 +3,7 @@ export type FakeEntryType = "add" | "modify" | "hide";
 export interface FakeMessageEntry {
     id: string;
     type: FakeEntryType;
-
     originalId?: string;
-
     authorId?: string;
     authorUsername?: string;
     authorAvatar?: string;
@@ -20,11 +18,10 @@ export interface FakeMessagesData {
     entries: Record<string, FakeMessageEntry[]>;
 }
 
-export function createEmptyEntry(type: FakeEntryType, channelId: string): FakeMessageEntry {
+export function createEmptyEntry(type: FakeEntryType): FakeMessageEntry {
     return {
-        id: `fake_${type}_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+        id: `fake_${type}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
         type,
-        timestamp: new Date().toISOString(),
     };
 }
 
@@ -40,9 +37,6 @@ export function removeEntry(data: FakeMessagesData, channelId: string, entryId: 
 export function upsertEntry(data: FakeMessagesData, channelId: string, entry: FakeMessageEntry): void {
     if (!data.entries[channelId]) data.entries[channelId] = [];
     const idx = data.entries[channelId].findIndex(e => e.id === entry.id);
-    if (idx !== -1) {
-        data.entries[channelId][idx] = entry;
-    } else {
-        data.entries[channelId].push(entry);
-    }
+    if (idx !== -1) data.entries[channelId][idx] = entry;
+    else data.entries[channelId].push(entry);
 }

@@ -1,6 +1,6 @@
 import { React, FluxDispatcher, ChannelStore, UserStore, SelectedChannelStore } from "@webpack/common";
 import { addContextMenuPatch, removeContextMenuPatch, NavContextMenuPatchCallback } from "@api/ContextMenu";
-import { Menu, Tooltip, Forms, Switch } from "@webpack/common";
+import { Menu, Forms, Switch } from "@webpack/common";
 import { DataStore } from "@api/index";
 
 import { FakeMessagesData, FakeMessageEntry } from "./FakeMessageStore";
@@ -33,8 +33,8 @@ export function isEnabledForChannel(channelId: string): boolean {
 function applyFakesToMessages(channelId: string, messages: any[]): any[] {
     if (!isEnabledForChannel(channelId)) return messages;
 
-    const entries = pluginData.entries[channelId] ?? [];
-    if (!entries.length) return messages;
+    const entries = pluginData.entries[channelId];
+    if (!entries?.length) return messages;
 
     let result = [...messages];
 
@@ -50,22 +50,15 @@ function applyFakesToMessages(channelId: string, messages: any[]): any[] {
                     author: entry.authorUsername
                         ? { ...m.author, username: entry.authorUsername, globalName: entry.authorUsername }
                         : m.author,
-                    _fakeModified: true,
                 };
             });
         } else if (entry.type === "add") {
             const fakeMsg = buildFakeMessage(entry, channelId);
-            if (fakeMsg) {
-                if (entry.insertAfter) {
-                    const idx = result.findIndex(m => m.id === entry.insertAfter);
-                    if (idx !== -1) {
-                        result.splice(idx + 1, 0, fakeMsg);
-                    } else {
-                        result.push(fakeMsg);
-                    }
-                } else {
-                    result.push(fakeMsg);
-                }
+            if (entry.insertAfter) {
+                const idx = result.findIndex(m => m.id === entry.insertAfter);
+                result.splice(idx !== -1 ? idx + 1 : result.length, 0, fakeMsg);
+            } else {
+                result.push(fakeMsg);
             }
         }
     }
@@ -99,17 +92,12 @@ function buildFakeMessage(entry: FakeMessageEntry, channelId: string): any {
             globalName: entry.authorUsername ?? me?.globalName ?? me?.username ?? "Unknown",
             public_flags: 0,
         },
-        _fakeAdded: true,
     };
 }
 
-/**
- * Intercepts BEFORE stores process the action — returns a new object,
- * never mutates. This avoids the "has only a getter" crash entirely.
- */
 function fakeMessagesInterceptor(action: any) {
     if (action.type !== "LOAD_MESSAGES_SUCCESS") return;
-    if (!action.messages || !action.channelId) return;
+    if (!action.messages?.length || !action.channelId) return;
 
     const modified = applyFakesToMessages(action.channelId, action.messages);
     if (modified === action.messages) return;
@@ -123,50 +111,43 @@ const messageContextMenuPatch: NavContextMenuPatchCallback = (children, props) =
     const channelId = message.channel_id;
 
     children.push(
-        <Menu.MenuSeparator key="fake-sep" />,
-        <Menu.MenuGroup key="fake-group" label="Fake Messages">
+        <Menu.MenuSeparator key="fm-sep" />,
+        <Menu.MenuGroup key="fm-group" label="Fake Messages">
             <Menu.MenuItem
-                key="fake-edit"
-                id="fake-edit"
-                label="✏️ Edit This Message (Fake)"
-                action={() => openFakeMessagesModal(channelId, {
-                    prefill: "modify",
-                    targetMessage: message,
-                })}
+                key="fm-edit"
+                id="fm-edit"
+                label="✏️ Edit Message (Fake)"
+                action={() => openFakeMessagesModal(channelId, { prefill: "modify", targetMessage: message })}
             />
             <Menu.MenuItem
-                key="fake-hide"
-                id="fake-hide"
-                label="🙈 Hide This Message (Fake)"
+                key="fm-hide"
+                id="fm-hide"
+                label="🙈 Hide Message (Fake)"
                 action={async () => {
                     if (!pluginData.entries[channelId]) pluginData.entries[channelId] = [];
                     const alreadyHidden = pluginData.entries[channelId].some(
                         e => e.type === "hide" && e.originalId === message.id
                     );
-                    if (!alreadyHidden) {
-                        pluginData.entries[channelId].push({
-                            id: `fake_hide_${Date.now()}`,
-                            type: "hide",
-                            originalId: message.id,
-                        });
-                        await saveData();
-                        reloadChannel(channelId);
-                    }
+                    if (alreadyHidden) return;
+                    pluginData.entries[channelId].push({
+                        id: `fake_hide_${Date.now()}`,
+                        type: "hide",
+                        originalId: message.id,
+                    });
+                    await saveData();
+                    reloadChannel(channelId);
                 }}
             />
             <Menu.MenuItem
-                key="fake-add-after"
-                id="fake-add-after"
-                label="➕ Add Fake Message After This"
-                action={() => openFakeMessagesModal(channelId, {
-                    prefill: "add",
-                    insertAfter: message.id,
-                })}
+                key="fm-add"
+                id="fm-add"
+                label="➕ Insert Fake Message After This"
+                action={() => openFakeMessagesModal(channelId, { prefill: "add", insertAfter: message.id })}
             />
             <Menu.MenuItem
-                key="fake-manager"
-                id="fake-manager"
-                label="🗂️ Open Fake Message Manager"
+                key="fm-manager"
+                id="fm-manager"
+                label="🗂️ Manage Fake Messages"
                 action={() => openFakeMessagesModal(channelId, {})}
             />
         </Menu.MenuGroup>
@@ -178,58 +159,46 @@ const channelContextMenuPatch: NavContextMenuPatchCallback = (children, props) =
     if (!channelId) return;
 
     children.push(
-        <Menu.MenuSeparator key="fake-ch-sep" />,
+        <Menu.MenuSeparator key="fm-ch-sep" />,
         <Menu.MenuItem
-            key="fake-ch-manager"
-            id="fake-ch-manager"
-            label="🎭 Fake Messages Manager"
+            key="fm-ch-manager"
+            id="fm-ch-manager"
+            label="🎭 Fake Messages"
             action={() => openFakeMessagesModal(channelId, {})}
         />
     );
 };
 
 export function reloadChannel(channelId: string) {
-    const ch = ChannelStore.getChannel(channelId);
     if (SelectedChannelStore.getChannelId() !== channelId) return;
+    const ch = ChannelStore.getChannel(channelId);
 
     FluxDispatcher.dispatch({ type: "CHANNEL_SELECT", channelId: null, guildId: null });
-
     setTimeout(() => {
-        FluxDispatcher.dispatch({
-            type: "CHANNEL_SELECT",
-            channelId,
-            guildId: ch?.guild_id ?? null,
-        });
+        FluxDispatcher.dispatch({ type: "CHANNEL_SELECT", channelId, guildId: ch?.guild_id ?? null });
     }, 80);
 }
 
 export default ({
     name: "FakeMessages",
-    description: "Visually fake Discord messages — add, edit, or hide messages per channel. Changes persist across refreshes. For Equicord/Vencord.",
+    description: "Visually fake Discord messages — add, edit, or hide messages per channel. Changes persist across refreshes.",
     authors: [{ name: "FakeMessages Plugin", id: 0n }],
-
     dependencies: ["ContextMenuAPI"],
 
     async start() {
         await loadData();
-
-        // intercept() fires BEFORE stores — returns new object, never mutates
         interceptDispose = (FluxDispatcher as any).intercept(fakeMessagesInterceptor);
-
         addContextMenuPatch("message", messageContextMenuPatch);
         addContextMenuPatch("channel-context", channelContextMenuPatch);
         addContextMenuPatch("gdm-context", channelContextMenuPatch);
-        addContextMenuPatch("user-context", channelContextMenuPatch);
     },
 
     stop() {
         interceptDispose?.();
         interceptDispose = null;
-
         removeContextMenuPatch("message", messageContextMenuPatch);
         removeContextMenuPatch("channel-context", channelContextMenuPatch);
         removeContextMenuPatch("gdm-context", channelContextMenuPatch);
-        removeContextMenuPatch("user-context", channelContextMenuPatch);
     },
 
     settingsAboutComponent() {
@@ -237,7 +206,6 @@ export default ({
 
         return (
             <Forms.FormSection>
-                <Forms.FormTitle tag="h3">Global Toggle</Forms.FormTitle>
                 <Switch
                     value={globalEnabled}
                     onChange={async (v: boolean) => {
@@ -245,14 +213,14 @@ export default ({
                         setGlobalEnabled(v);
                         await saveData();
                     }}
-                    note="Master switch — disables all fake messages everywhere when off."
+                    note="Master switch. When off, all fake messages are hidden everywhere."
                 >
                     Enable Fake Messages Globally
                 </Switch>
-                <Forms.FormDivider />
+                <Forms.FormDivider style={{ margin: "12px 0" }} />
                 <Forms.FormText type={Forms.FormText.Types.DESCRIPTION}>
-                    Right-click any message → Edit / Hide / Add fake message.{"\n"}
-                    Right-click any channel in the sidebar → Fake Messages Manager.
+                    • Right-click any message → Edit / Hide / Insert fake{"\n"}
+                    • Right-click any channel in the sidebar → Fake Messages
                 </Forms.FormText>
             </Forms.FormSection>
         );
