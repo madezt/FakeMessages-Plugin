@@ -70,14 +70,10 @@ userplugins/
 Open a terminal in your Vencord/Equicord directory and run:
 
 ```bash
-# Vencord
-pnpm build
-
-# Equicord
 pnpm build
 ```
 
-Or if you're using the injector without source:
+If the build succeeds with no errors, then run:
 
 ```bash
 pnpm inject
@@ -257,7 +253,7 @@ The plugin stores data in this format:
 - Try reloading Discord
 
 **Chat bar button missing**
-- Make sure `ChatBarAPI` is enabled in Vencord settings
+- The chat bar button is loaded at runtime via webpack. If your version of Equicord/Vencord has `ChatBarAPI`, it will appear automatically. If not, all features are still available via right-click menus.
 
 ---
 

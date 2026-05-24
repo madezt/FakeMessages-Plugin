@@ -1,7 +1,6 @@
 import { React, UserStore, ChannelStore } from "@webpack/common";
 import { ModalRoot, ModalHeader, ModalContent, ModalFooter, ModalCloseButton, openModal } from "@utils/modal";
-import { Forms, Button, TextInput, Switch, Select, Text, Tooltip, ScrollerThin } from "@webpack/common";
-import { cl } from "@utils/misc";
+import { Forms, Button, TextInput, Switch, Text, Tooltip, ScrollerThin } from "@webpack/common";
 
 import { pluginData, saveData, reloadChannel, isEnabledForChannel } from "./index";
 import { FakeMessageEntry, FakeEntryType, createEmptyEntry, removeEntry, upsertEntry, getEntriesForChannel } from "./FakeMessageStore";

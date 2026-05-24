@@ -1,7 +1,7 @@
-import { definePlugin } from "@utils/definePlugin";
+import definePlugin from "@utils/definePlugin";
+import { findByPropsLazy } from "@webpack";
 import { React, FluxDispatcher, ChannelStore, UserStore, SelectedChannelStore } from "@webpack/common";
 import { addContextMenuPatch, removeContextMenuPatch, NavContextMenuPatchCallback } from "@api/ContextMenu";
-import { addChatBarButton, removeChatBarButton, ChatBarButton } from "@api/ChatBarButtons";
 import { Menu, Tooltip, Forms, Switch } from "@webpack/common";
 import { DataStore } from "@api/index";
 
@@ -15,6 +15,8 @@ export let pluginData: FakeMessagesData = {
     channelEnabled: {},
     entries: {},
 };
+
+const ChatBarAPI = findByPropsLazy("addChatBarButton", "removeChatBarButton");
 
 export async function loadData() {
     const saved = await DataStore.get<FakeMessagesData>(PLUGIN_DATA_KEY);
@@ -109,12 +111,6 @@ function handleLoadMessagesSuccess(payload: any) {
     payload.messages = applyFakesToMessages(payload.channelId, payload.messages);
 }
 
-function handleMessageCreate(payload: any) {
-    if (!payload?.message?.channel_id) return;
-    const channelId = payload.message.channel_id;
-    if (!isEnabledForChannel(channelId)) return;
-}
-
 const messageContextMenuPatch: NavContextMenuPatchCallback = (children, props) => {
     if (!props?.message) return;
     const { message } = props;
@@ -193,7 +189,7 @@ const channelContextMenuPatch: NavContextMenuPatchCallback = (children, props) =
     );
 };
 
-const ChatBarIcon: ChatBarButton = ({ isMainChat }) => {
+function ChatBarIcon({ isMainChat }: { isMainChat?: boolean; }) {
     if (!isMainChat) return null;
     const channelId = SelectedChannelStore.getChannelId();
     if (!channelId) return null;
@@ -202,7 +198,7 @@ const ChatBarIcon: ChatBarButton = ({ isMainChat }) => {
 
     return (
         <Tooltip text="Fake Messages Manager">
-            {({ onMouseEnter, onMouseLeave }) => (
+            {({ onMouseEnter, onMouseLeave }: any) => (
                 <div
                     onMouseEnter={onMouseEnter}
                     onMouseLeave={onMouseLeave}
@@ -221,13 +217,12 @@ const ChatBarIcon: ChatBarButton = ({ isMainChat }) => {
                             d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"
                         />
                         <circle cx="18" cy="6" r="5" fill="#f04747" />
-                        <text x="18" y="9" textAnchor="middle" fontSize="7" fill="white" fontWeight="bold">✎</text>
                     </svg>
                 </div>
             )}
         </Tooltip>
     );
-};
+}
 
 export function reloadChannel(channelId: string) {
     const ch = ChannelStore.getChannel(channelId);
@@ -255,32 +250,34 @@ export default definePlugin({
     description: "Visually fake Discord messages — add, edit, or hide messages per channel. Changes persist across refreshes. For Equicord/Vencord.",
     authors: [{ name: "FakeMessages Plugin", id: 0n }],
 
-    dependencies: ["ChatBarAPI", "ContextMenuAPI"],
+    dependencies: ["ContextMenuAPI"],
 
     async start() {
         await loadData();
 
         FluxDispatcher.subscribe("LOAD_MESSAGES_SUCCESS", handleLoadMessagesSuccess);
-        FluxDispatcher.subscribe("MESSAGE_CREATE", handleMessageCreate);
 
         addContextMenuPatch("message", messageContextMenuPatch);
         addContextMenuPatch("channel-context", channelContextMenuPatch);
         addContextMenuPatch("gdm-context", channelContextMenuPatch);
         addContextMenuPatch("user-context", channelContextMenuPatch);
 
-        addChatBarButton("FakeMessages", ChatBarIcon);
+        try {
+            ChatBarAPI?.addChatBarButton?.("FakeMessages", ChatBarIcon);
+        } catch (_) {}
     },
 
     stop() {
         FluxDispatcher.unsubscribe("LOAD_MESSAGES_SUCCESS", handleLoadMessagesSuccess);
-        FluxDispatcher.unsubscribe("MESSAGE_CREATE", handleMessageCreate);
 
         removeContextMenuPatch("message", messageContextMenuPatch);
         removeContextMenuPatch("channel-context", channelContextMenuPatch);
         removeContextMenuPatch("gdm-context", channelContextMenuPatch);
         removeContextMenuPatch("user-context", channelContextMenuPatch);
 
-        removeChatBarButton("FakeMessages");
+        try {
+            ChatBarAPI?.removeChatBarButton?.("FakeMessages");
+        } catch (_) {}
     },
 
     settingsAboutComponent() {
@@ -291,7 +288,7 @@ export default definePlugin({
                 <Forms.FormTitle tag="h3">Global Toggle</Forms.FormTitle>
                 <Switch
                     value={globalEnabled}
-                    onChange={async (v) => {
+                    onChange={async (v: boolean) => {
                         pluginData.globalEnabled = v;
                         setGlobalEnabled(v);
                         await saveData();
@@ -302,8 +299,8 @@ export default definePlugin({
                 </Switch>
                 <Forms.FormDivider />
                 <Forms.FormText type={Forms.FormText.Types.DESCRIPTION}>
-                    Use the 💬 button in the chat bar to manage fake messages per channel.
-                    Right-click any message for quick edit/hide options.
+                    Right-click any message for quick edit/hide/add options.
+                    Right-click any channel in the sidebar to open the full manager.
                 </Forms.FormText>
             </Forms.FormSection>
         );
